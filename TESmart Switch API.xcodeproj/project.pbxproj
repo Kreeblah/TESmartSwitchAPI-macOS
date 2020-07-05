@@ -1,0 +1,581 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04D2751724B191F400534A77 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2751624B191F400534A77 /* AppDelegate.m */; };
+		04D2751A24B191F400534A77 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2751924B191F400534A77 /* ViewController.m */; };
+		04D2751C24B191F800534A77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04D2751B24B191F800534A77 /* Assets.xcassets */; };
+		04D2751F24B191F800534A77 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04D2751D24B191F800534A77 /* Main.storyboard */; };
+		04D2752224B191F800534A77 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2752124B191F800534A77 /* main.m */; };
+		04D2752D24B191F800534A77 /* TESmartSwitchAPITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2752C24B191F800534A77 /* TESmartSwitchAPITests.m */; };
+		04D2753824B191F800534A77 /* TESmartSwitchAPIUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2753724B191F800534A77 /* TESmartSwitchAPIUITests.m */; };
+		04D2754724B214DF00534A77 /* SwitchAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2754624B214DF00534A77 /* SwitchAPI.m */; };
+		04D2754A24B2692500534A77 /* PrefsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2754924B2692500534A77 /* PrefsViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		04D2752924B191F800534A77 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04D2750A24B191F400534A77 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04D2751124B191F400534A77;
+			remoteInfo = TESmartSwitchAPI;
+		};
+		04D2753424B191F800534A77 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04D2750A24B191F400534A77 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04D2751124B191F400534A77;
+			remoteInfo = TESmartSwitchAPI;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		04D2751224B191F400534A77 /* TESmart Switch API.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TESmart Switch API.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04D2751524B191F400534A77 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		04D2751624B191F400534A77 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		04D2751824B191F400534A77 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		04D2751924B191F400534A77 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		04D2751B24B191F800534A77 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		04D2751E24B191F800534A77 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		04D2752024B191F800534A77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04D2752124B191F800534A77 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		04D2752324B191F800534A77 /* TESmartSwitchAPI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TESmartSwitchAPI.entitlements; sourceTree = "<group>"; };
+		04D2752824B191F800534A77 /* TESmart Switch APITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TESmart Switch APITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04D2752C24B191F800534A77 /* TESmartSwitchAPITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TESmartSwitchAPITests.m; sourceTree = "<group>"; };
+		04D2752E24B191F800534A77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04D2753324B191F800534A77 /* TESmart Switch APIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TESmart Switch APIUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04D2753724B191F800534A77 /* TESmartSwitchAPIUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TESmartSwitchAPIUITests.m; sourceTree = "<group>"; };
+		04D2753924B191F800534A77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04D2754524B214DF00534A77 /* SwitchAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwitchAPI.h; sourceTree = "<group>"; };
+		04D2754624B214DF00534A77 /* SwitchAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwitchAPI.m; sourceTree = "<group>"; };
+		04D2754824B2692500534A77 /* PrefsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefsViewController.h; sourceTree = "<group>"; };
+		04D2754924B2692500534A77 /* PrefsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrefsViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		04D2750F24B191F400534A77 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04D2752524B191F800534A77 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04D2753024B191F800534A77 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04D2750924B191F400534A77 = {
+			isa = PBXGroup;
+			children = (
+				04D2751424B191F400534A77 /* TESmartSwitchAPI */,
+				04D2752B24B191F800534A77 /* TESmartSwitchAPITests */,
+				04D2753624B191F800534A77 /* TESmartSwitchAPIUITests */,
+				04D2751324B191F400534A77 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		04D2751324B191F400534A77 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				04D2751224B191F400534A77 /* TESmart Switch API.app */,
+				04D2752824B191F800534A77 /* TESmart Switch APITests.xctest */,
+				04D2753324B191F800534A77 /* TESmart Switch APIUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		04D2751424B191F400534A77 /* TESmartSwitchAPI */ = {
+			isa = PBXGroup;
+			children = (
+				04D2751524B191F400534A77 /* AppDelegate.h */,
+				04D2751624B191F400534A77 /* AppDelegate.m */,
+				04D2751824B191F400534A77 /* ViewController.h */,
+				04D2754824B2692500534A77 /* PrefsViewController.h */,
+				04D2754924B2692500534A77 /* PrefsViewController.m */,
+				04D2751924B191F400534A77 /* ViewController.m */,
+				04D2751B24B191F800534A77 /* Assets.xcassets */,
+				04D2751D24B191F800534A77 /* Main.storyboard */,
+				04D2752024B191F800534A77 /* Info.plist */,
+				04D2752124B191F800534A77 /* main.m */,
+				04D2752324B191F800534A77 /* TESmartSwitchAPI.entitlements */,
+				04D2754524B214DF00534A77 /* SwitchAPI.h */,
+				04D2754624B214DF00534A77 /* SwitchAPI.m */,
+			);
+			path = TESmartSwitchAPI;
+			sourceTree = "<group>";
+		};
+		04D2752B24B191F800534A77 /* TESmartSwitchAPITests */ = {
+			isa = PBXGroup;
+			children = (
+				04D2752C24B191F800534A77 /* TESmartSwitchAPITests.m */,
+				04D2752E24B191F800534A77 /* Info.plist */,
+			);
+			path = TESmartSwitchAPITests;
+			sourceTree = "<group>";
+		};
+		04D2753624B191F800534A77 /* TESmartSwitchAPIUITests */ = {
+			isa = PBXGroup;
+			children = (
+				04D2753724B191F800534A77 /* TESmartSwitchAPIUITests.m */,
+				04D2753924B191F800534A77 /* Info.plist */,
+			);
+			path = TESmartSwitchAPIUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		04D2751124B191F400534A77 /* TESmart Switch API */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04D2753C24B191F800534A77 /* Build configuration list for PBXNativeTarget "TESmart Switch API" */;
+			buildPhases = (
+				04D2750E24B191F400534A77 /* Sources */,
+				04D2750F24B191F400534A77 /* Frameworks */,
+				04D2751024B191F400534A77 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TESmart Switch API";
+			productName = TESmartSwitchAPI;
+			productReference = 04D2751224B191F400534A77 /* TESmart Switch API.app */;
+			productType = "com.apple.product-type.application";
+		};
+		04D2752724B191F800534A77 /* TESmart Switch APITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04D2753F24B191F800534A77 /* Build configuration list for PBXNativeTarget "TESmart Switch APITests" */;
+			buildPhases = (
+				04D2752424B191F800534A77 /* Sources */,
+				04D2752524B191F800534A77 /* Frameworks */,
+				04D2752624B191F800534A77 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				04D2752A24B191F800534A77 /* PBXTargetDependency */,
+			);
+			name = "TESmart Switch APITests";
+			productName = TESmartSwitchAPITests;
+			productReference = 04D2752824B191F800534A77 /* TESmart Switch APITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		04D2753224B191F800534A77 /* TESmart Switch APIUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04D2754224B191F800534A77 /* Build configuration list for PBXNativeTarget "TESmart Switch APIUITests" */;
+			buildPhases = (
+				04D2752F24B191F800534A77 /* Sources */,
+				04D2753024B191F800534A77 /* Frameworks */,
+				04D2753124B191F800534A77 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				04D2753524B191F800534A77 /* PBXTargetDependency */,
+			);
+			name = "TESmart Switch APIUITests";
+			productName = TESmartSwitchAPIUITests;
+			productReference = 04D2753324B191F800534A77 /* TESmart Switch APIUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		04D2750A24B191F400534A77 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = Kreeblah;
+				TargetAttributes = {
+					04D2751124B191F400534A77 = {
+						CreatedOnToolsVersion = 11.5;
+					};
+					04D2752724B191F800534A77 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = 04D2751124B191F400534A77;
+					};
+					04D2753224B191F800534A77 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = 04D2751124B191F400534A77;
+					};
+				};
+			};
+			buildConfigurationList = 04D2750D24B191F400534A77 /* Build configuration list for PBXProject "TESmart Switch API" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 04D2750924B191F400534A77;
+			productRefGroup = 04D2751324B191F400534A77 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				04D2751124B191F400534A77 /* TESmart Switch API */,
+				04D2752724B191F800534A77 /* TESmart Switch APITests */,
+				04D2753224B191F800534A77 /* TESmart Switch APIUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		04D2751024B191F400534A77 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04D2751C24B191F800534A77 /* Assets.xcassets in Resources */,
+				04D2751F24B191F800534A77 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04D2752624B191F800534A77 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04D2753124B191F800534A77 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		04D2750E24B191F400534A77 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04D2751A24B191F400534A77 /* ViewController.m in Sources */,
+				04D2754A24B2692500534A77 /* PrefsViewController.m in Sources */,
+				04D2752224B191F800534A77 /* main.m in Sources */,
+				04D2754724B214DF00534A77 /* SwitchAPI.m in Sources */,
+				04D2751724B191F400534A77 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04D2752424B191F800534A77 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04D2752D24B191F800534A77 /* TESmartSwitchAPITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04D2752F24B191F800534A77 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04D2753824B191F800534A77 /* TESmartSwitchAPIUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		04D2752A24B191F800534A77 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04D2751124B191F400534A77 /* TESmart Switch API */;
+			targetProxy = 04D2752924B191F800534A77 /* PBXContainerItemProxy */;
+		};
+		04D2753524B191F800534A77 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04D2751124B191F400534A77 /* TESmart Switch API */;
+			targetProxy = 04D2753424B191F800534A77 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		04D2751D24B191F800534A77 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				04D2751E24B191F800534A77 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		04D2753A24B191F800534A77 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		04D2753B24B191F800534A77 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		04D2753D24B191F800534A77 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TESmartSwitchAPI/TESmartSwitchAPI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = TESmartSwitchAPI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreeblah.TESmartSwitchAPI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		04D2753E24B191F800534A77 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TESmartSwitchAPI/TESmartSwitchAPI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = TESmartSwitchAPI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreeblah.TESmartSwitchAPI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		04D2754024B191F800534A77 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = TESmartSwitchAPITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreeblah.TESmartSwitchAPITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TESmart Switch API.app/Contents/MacOS/TESmart Switch API";
+			};
+			name = Debug;
+		};
+		04D2754124B191F800534A77 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = TESmartSwitchAPITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreeblah.TESmartSwitchAPITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TESmart Switch API.app/Contents/MacOS/TESmart Switch API";
+			};
+			name = Release;
+		};
+		04D2754324B191F800534A77 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = TESmartSwitchAPIUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreeblah.TESmartSwitchAPIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = TESmartSwitchAPI;
+			};
+			name = Debug;
+		};
+		04D2754424B191F800534A77 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = TESmartSwitchAPIUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreeblah.TESmartSwitchAPIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = TESmartSwitchAPI;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		04D2750D24B191F400534A77 /* Build configuration list for PBXProject "TESmart Switch API" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04D2753A24B191F800534A77 /* Debug */,
+				04D2753B24B191F800534A77 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04D2753C24B191F800534A77 /* Build configuration list for PBXNativeTarget "TESmart Switch API" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04D2753D24B191F800534A77 /* Debug */,
+				04D2753E24B191F800534A77 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04D2753F24B191F800534A77 /* Build configuration list for PBXNativeTarget "TESmart Switch APITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04D2754024B191F800534A77 /* Debug */,
+				04D2754124B191F800534A77 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04D2754224B191F800534A77 /* Build configuration list for PBXNativeTarget "TESmart Switch APIUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04D2754324B191F800534A77 /* Debug */,
+				04D2754424B191F800534A77 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 04D2750A24B191F400534A77 /* Project object */;
+}
