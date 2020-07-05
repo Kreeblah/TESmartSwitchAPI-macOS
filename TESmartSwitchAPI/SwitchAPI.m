@@ -276,7 +276,7 @@
     if(hasData) {
         return [self getIpStringFromReturnBytes:(unsigned char *)[[self runKvmCommand:portCommand hasData:YES] bytes] confirmHeader:confirmHeader];
     } else {
-        return [[NSString alloc] initWithData:portCommand encoding:NSUTF8StringEncoding];
+        return [[NSString alloc] initWithBytes:(unsigned char *)[[self runKvmCommand:portCommand hasData:YES] bytes] length:commandString.length encoding:NSUTF8StringEncoding];
     }
     
 }
