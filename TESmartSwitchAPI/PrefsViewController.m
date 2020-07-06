@@ -8,6 +8,8 @@
 
 #import "PrefsViewController.h"
 #import "SwitchAPI.h"
+#import "IPAddressFormatter.h"
+#import "RestrictedIntegerFormatter.h"
 
 @implementation PrefsViewController
 
@@ -20,11 +22,29 @@
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     
-    NSTextField* ipTextField = (NSTextField*) [self.view viewWithTag:1];
-    [ipTextField bind:@"value" toObject:[NSUserDefaultsController sharedUserDefaultsController] withKeyPath:@"values.kvmHost" options:nil];
+    NSTextField* connectionIpTextField = (NSTextField*) [self.view viewWithTag:1];
+    [connectionIpTextField bind:@"value" toObject:[NSUserDefaultsController sharedUserDefaultsController] withKeyPath:@"values.kvmHost" options:nil];
     
-    NSTextField* portTextField = (NSTextField*) [self.view viewWithTag:2];
-    [portTextField bind:@"value" toObject:[NSUserDefaultsController sharedUserDefaultsController] withKeyPath:@"values.kvmNetworkPort" options:nil];
+    NSTextField* connectionPortTextField = (NSTextField*) [self.view viewWithTag:2];
+    [connectionPortTextField bind:@"value" toObject:[NSUserDefaultsController sharedUserDefaultsController] withKeyPath:@"values.kvmNetworkPort" options:nil];
+    
+    NSTextField* configurationIpAddressTextField = (NSTextField*) [self.view viewWithTag:3];
+    NSTextField* configurationPortTextField = (NSTextField*) [self.view viewWithTag:4];
+    NSTextField* configurationNetmaskTextField = (NSTextField*) [self.view viewWithTag:5];
+    NSTextField* configurationGatewayTextField = (NSTextField*) [self.view viewWithTag:6];
+    
+    IPAddressFormatter* ipAddrFormatter = [[IPAddressFormatter alloc] init];
+    
+    [configurationIpAddressTextField setFormatter:ipAddrFormatter];
+    [configurationNetmaskTextField setFormatter:ipAddrFormatter];
+    [configurationGatewayTextField setFormatter:ipAddrFormatter];
+    
+    RestrictedIntegerFormatter* restrictedIntFormatter = [[RestrictedIntegerFormatter alloc] init];
+    
+    [restrictedIntFormatter setMininumValue:0 maximumValue:65535];
+    
+    [connectionPortTextField setFormatter:restrictedIntFormatter];
+    [configurationPortTextField setFormatter:restrictedIntFormatter];
     
     if(apiObj == nil) {
         apiObj = [SwitchAPI sharedInstance];

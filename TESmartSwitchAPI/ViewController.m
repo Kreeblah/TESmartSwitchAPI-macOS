@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "SwitchAPI.h"
+#import "RestrictedIntegerFormatter.h"
 
 @implementation ViewController
 
@@ -19,6 +20,13 @@
     [appDefaults setObject:@(5000) forKey:@"KvmNetworkPort"];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
+    
+    NSTextField* timeoutValue = (NSTextField*) [self.view viewWithTag:20];
+    RestrictedIntegerFormatter* restrictedIntFormatter = [[RestrictedIntegerFormatter alloc] init];
+    
+    [restrictedIntFormatter setMininumValue:0 maximumValue:255];
+    
+    [timeoutValue setFormatter:restrictedIntFormatter];
     
     if(apiObj == nil) {
         apiObj = [SwitchAPI sharedInstance];

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		043175F324B2ACB900ABE2C0 /* RestrictedIntegerFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 043175F224B2ACB900ABE2C0 /* RestrictedIntegerFormatter.m */; };
+		043175F624B2B35800ABE2C0 /* IPAddressFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 043175F524B2B35800ABE2C0 /* IPAddressFormatter.m */; };
 		04D2751724B191F400534A77 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2751624B191F400534A77 /* AppDelegate.m */; };
 		04D2751A24B191F400534A77 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2751924B191F400534A77 /* ViewController.m */; };
 		04D2751C24B191F800534A77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04D2751B24B191F800534A77 /* Assets.xcassets */; };
@@ -36,6 +38,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		043175F124B2ACB900ABE2C0 /* RestrictedIntegerFormatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RestrictedIntegerFormatter.h; sourceTree = "<group>"; };
+		043175F224B2ACB900ABE2C0 /* RestrictedIntegerFormatter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RestrictedIntegerFormatter.m; sourceTree = "<group>"; };
+		043175F424B2B35800ABE2C0 /* IPAddressFormatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPAddressFormatter.h; sourceTree = "<group>"; };
+		043175F524B2B35800ABE2C0 /* IPAddressFormatter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPAddressFormatter.m; sourceTree = "<group>"; };
 		04D2751224B191F400534A77 /* TESmart Switch API.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TESmart Switch API.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D2751524B191F400534A77 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		04D2751624B191F400534A77 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -119,6 +125,10 @@
 				04D2752324B191F800534A77 /* TESmartSwitchAPI.entitlements */,
 				04D2754524B214DF00534A77 /* SwitchAPI.h */,
 				04D2754624B214DF00534A77 /* SwitchAPI.m */,
+				043175F124B2ACB900ABE2C0 /* RestrictedIntegerFormatter.h */,
+				043175F224B2ACB900ABE2C0 /* RestrictedIntegerFormatter.m */,
+				043175F424B2B35800ABE2C0 /* IPAddressFormatter.h */,
+				043175F524B2B35800ABE2C0 /* IPAddressFormatter.m */,
 			);
 			path = TESmartSwitchAPI;
 			sourceTree = "<group>";
@@ -270,8 +280,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				043175F324B2ACB900ABE2C0 /* RestrictedIntegerFormatter.m in Sources */,
 				04D2751A24B191F400534A77 /* ViewController.m in Sources */,
 				04D2754A24B2692500534A77 /* PrefsViewController.m in Sources */,
+				043175F624B2B35800ABE2C0 /* IPAddressFormatter.m in Sources */,
 				04D2752224B191F800534A77 /* main.m in Sources */,
 				04D2754724B214DF00534A77 /* SwitchAPI.m in Sources */,
 				04D2751724B191F400534A77 /* AppDelegate.m in Sources */,
