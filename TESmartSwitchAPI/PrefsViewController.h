@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PrefsViewController : NSViewController {
+@interface PrefsViewController : NSViewController <SwitchAPICallback> {
     @private SwitchAPI* apiObj;
 }
 

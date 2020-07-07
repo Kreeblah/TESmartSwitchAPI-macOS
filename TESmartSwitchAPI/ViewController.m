@@ -16,8 +16,8 @@
     [super viewDidLoad];
 
     NSMutableDictionary* appDefaults = [[NSMutableDictionary alloc] initWithCapacity:10];
-    [appDefaults setObject:@"192.168.1.10" forKey:@"KvmHost"];
-    [appDefaults setObject:@(5000) forKey:@"KvmNetworkPort"];
+    [appDefaults setObject:@"192.168.1.10" forKey:@"kvmHost"];
+    [appDefaults setObject:@(5000) forKey:@"kvmNetworkPort"];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     
@@ -31,28 +31,35 @@
     if(apiObj == nil) {
         apiObj = [SwitchAPI sharedInstance];
     }
+    
+    [apiObj registerCallbackObject:self];
 }
 
 - (IBAction)ConnectButton:(id)sender {
-    if(currentPort == 0) {
-        if([apiObj connectToKvm:[[NSUserDefaults standardUserDefaults] stringForKey:@"kvmHost"] port:(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"kvmNetworkPort"]]) {
-            int testPort = [apiObj getDisplayPort];
-            if(testPort > 0) {
-                [sender setTitle:@"Disconnect"];
-                [sender sizeToFit];
-                currentPort = testPort;
-                [self enableKvmButtons:YES];
-                [self setPortButton:currentPort];
-            }
-        }
+    if(![apiObj isConnected] && ![apiObj pendingConnection]) {
+        [apiObj connectToKvm:[[NSUserDefaults standardUserDefaults] stringForKey:@"kvmHost"] port:(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"kvmNetworkPort"]];
     } else {
-        if([apiObj disconnectFromKvm]) {
-            [self enableKvmButtons:NO];
-            currentPort = 0;
-            [sender setTitle:@"Connect"];
-            [sender sizeToFit];
-        }
+        [apiObj disconnectFromKvm];
     }
+}
+
+- (void)connectionCallback {
+    [self enableKvmButtons:YES];
+    
+    [apiObj getDisplayPort];
+    
+    NSButton* connectButton = (NSButton*) [self.view viewWithTag:22];
+    [connectButton setTitle:@"Disconnect"];
+    [connectButton sizeToFit];
+}
+
+- (void)disconnectionCallback {
+    [self enableKvmButtons:NO];
+    currentPort = 0;
+
+    NSButton* disconnectButton = (NSButton*) [self.view viewWithTag:22];
+    [disconnectButton setTitle:@"Connect"];
+    [disconnectButton sizeToFit];
 }
 
 - (IBAction)EnableBuzzer:(id)sender {
@@ -64,8 +71,13 @@
 }
 
 - (IBAction)PortSelect:(id)sender {
-    if([apiObj setDisplayPort:(int)[sender tag]]) {
-        currentPort = (int)[sender tag];
+    [apiObj setDisplayPort:(int)[sender tag]];
+}
+
+- (void)portSelectionCallback:(NSNumber*)selectedPortNumber {
+    if(selectedPortNumber > 0) {
+        currentPort = [selectedPortNumber intValue];
+        [self setPortButton:currentPort];
     }
 }
 
