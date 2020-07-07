@@ -501,11 +501,6 @@
         return;
     }
 
-    //Calling writeData too quickly combines multiple writes
-    //into a single packet, which causes the call to fail,
-    //and the connection to be closed.
-//    sleep(1);
-    
     [kvmSocket writeData:command withTimeout:20 tag:dataTag];
 
     if(responseLength > 0) {
@@ -518,6 +513,7 @@
 }
 
 - (void)socket:(GCDAsyncSocket*)sock didConnectToHost:(nonnull NSString *)host port:(uint16_t)port {
+    NSLog(@"Connected to KVM at %@ on port %d", host, port);
     
     switchHost = host;
     switchPort = port;
@@ -533,6 +529,8 @@
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)error {
+    NSLog(@"Disconnected from KVM");
+    
     switchHost = NULL;
     switchPort = 0;
     
