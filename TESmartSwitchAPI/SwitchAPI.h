@@ -34,16 +34,17 @@ NS_ASSUME_NONNULL_BEGIN
 #define KVM_TAG_DISCONNECT 2
 #define KVM_TAG_SET_DISPLAY_TIMEOUT 3
 #define KVM_TAG_SET_BUZZER_ENABLED 4
-#define KVM_TAG_GET_DISPLAY_PORT 5
-#define KVM_TAG_SET_DISPLAY_PORT 6
-#define KVM_TAG_GET_CONFIGURED_IP 7
-#define KVM_TAG_GET_CONFIGURED_PORT 8
-#define KVM_TAG_GET_CONFIGURED_NETMASK 9
-#define KVM_TAG_GET_CONFIGURED_GATEWAY 10
-#define KVM_TAG_SET_CONFIGURED_IP 11
-#define KVM_TAG_SET_CONFIGURED_PORT 12
-#define KVM_TAG_SET_CONFIGURED_NETMASK 13
-#define KVM_TAG_SET_CONFIGURED_GATEWAY 14
+#define KVM_TAG_SET_ACTIVE_INPUT_DETECTION_ENABLED 5
+#define KVM_TAG_GET_DISPLAY_PORT 6
+#define KVM_TAG_SET_DISPLAY_PORT 7
+#define KVM_TAG_GET_CONFIGURED_IP 8
+#define KVM_TAG_GET_CONFIGURED_PORT 9
+#define KVM_TAG_GET_CONFIGURED_NETMASK 10
+#define KVM_TAG_GET_CONFIGURED_GATEWAY 11
+#define KVM_TAG_SET_CONFIGURED_IP 12
+#define KVM_TAG_SET_CONFIGURED_PORT 13
+#define KVM_TAG_SET_CONFIGURED_NETMASK 14
+#define KVM_TAG_SET_CONFIGURED_GATEWAY 15
 
 @protocol SwitchAPICallback
 @optional
@@ -86,6 +87,7 @@ typedef struct sCallbackParameters CallbackParameters;
 - (BOOL)pendingConnection;
 - (BOOL)setDisplayTimeoutSeconds:(int)timeoutSeconds;
 - (BOOL)setBuzzerEnabled:(BOOL)buzzerEnable;
+- (BOOL)setActiveInputDetectionEnabled:(BOOL)inputDetectionEnable;
 - (BOOL)getDisplayPort;
 - (BOOL)setDisplayPort:(int)portNumber;
 - (BOOL)getConfiguredIpAddress;

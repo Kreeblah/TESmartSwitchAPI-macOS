@@ -88,6 +88,14 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     [apiObj setBuzzerEnabled:NO];
 }
 
+- (IBAction)EnableActiveInputDetection:(id)sender {
+    [apiObj setActiveInputDetectionEnabled:YES];
+}
+
+- (IBAction)DisableActiveInputDetection:(id)sender {
+    [apiObj setActiveInputDetectionEnabled:NO];
+}
+
 - (IBAction)PortSelect:(id)sender {
     [apiObj setDisplayPort:(int)[sender tag]];
 }
@@ -145,6 +153,12 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     
     NSButton* timeoutSubmit = (NSButton*) [self.view viewWithTag:21];
     [timeoutSubmit setEnabled:kvmButtonEnableBool];
+    
+    NSButton* activeInputDetectionEnable = (NSButton*) [self.view viewWithTag:23];
+    [activeInputDetectionEnable setEnabled:kvmButtonEnableBool];
+    
+    NSButton* activeInputDetectionDisable = (NSButton*) [self.view viewWithTag:24];
+    [activeInputDetectionDisable setEnabled:kvmButtonEnableBool];
 }
 
 - (NSArray<NSButton*>*)getPortButtonRefs {

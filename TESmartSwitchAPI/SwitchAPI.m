@@ -135,6 +135,29 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     return YES;
 }
 
+- (BOOL)setActiveInputDetectionEnabled:(BOOL)inputDetectionEnable {
+    if(!isConnected && !pendingConnection) {
+        return NO;
+    }
+    
+    NSMutableData* portCommand = [NSMutableData dataWithLength:6];
+    
+    ((char*)[portCommand mutableBytes])[0] = 0xaa;
+    ((char*)[portCommand mutableBytes])[1] = 0xbb;
+    ((char*)[portCommand mutableBytes])[2] = 0x03;
+    ((char*)[portCommand mutableBytes])[3] = 0x81;
+    if(inputDetectionEnable) {
+        ((char*)[portCommand mutableBytes])[4] = 0x01;
+    } else {
+        ((char*)[portCommand mutableBytes])[4] = 0x00;
+    }
+    ((char*)[portCommand mutableBytes])[5] = 0xee;
+    
+    [self runKvmCommand:portCommand responseLength:0 dataTag:KVM_TAG_SET_ACTIVE_INPUT_DETECTION_ENABLED];
+    
+    return YES;
+}
+
 - (BOOL)getDisplayPort {
     if(!isConnected && !pendingConnection) {
         return NO;
