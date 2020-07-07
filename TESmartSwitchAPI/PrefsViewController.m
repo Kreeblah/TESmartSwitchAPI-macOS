@@ -137,7 +137,7 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     sleep(1);
     
     NSTextField* netmaskTextField = (NSTextField*) [self.view viewWithTag:5];
-    [apiObj setConfiguredGateway:[netmaskTextField stringValue]];
+    [apiObj setConfiguredNetmask:[netmaskTextField stringValue]];
     
     sleep(1);
     

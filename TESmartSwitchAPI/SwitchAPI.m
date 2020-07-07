@@ -98,16 +98,16 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    NSMutableData* portCommand = [NSMutableData dataWithLength:6];
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:6];
     
-    ((char*)[portCommand mutableBytes])[0] = 0xaa;
-    ((char*)[portCommand mutableBytes])[1] = 0xbb;
-    ((char*)[portCommand mutableBytes])[2] = 0x03;
-    ((char*)[portCommand mutableBytes])[3] = 0x03;
-    ((char*)[portCommand mutableBytes])[4] = timeoutSeconds;
-    ((char*)[portCommand mutableBytes])[5] = 0xee;
+    ((char*)[kvmCommand mutableBytes])[0] = 0xaa;
+    ((char*)[kvmCommand mutableBytes])[1] = 0xbb;
+    ((char*)[kvmCommand mutableBytes])[2] = 0x03;
+    ((char*)[kvmCommand mutableBytes])[3] = 0x03;
+    ((char*)[kvmCommand mutableBytes])[4] = timeoutSeconds;
+    ((char*)[kvmCommand mutableBytes])[5] = 0xee;
     
-    [self runKvmCommand:portCommand responseLength:0 dataTag:KVM_TAG_SET_DISPLAY_TIMEOUT];
+    [self runKvmCommand:kvmCommand responseLength:0 dataTag:KVM_TAG_SET_DISPLAY_TIMEOUT];
     
     return YES;
 }
@@ -117,20 +117,20 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    NSMutableData* portCommand = [NSMutableData dataWithLength:6];
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:6];
     
-    ((char*)[portCommand mutableBytes])[0] = 0xaa;
-    ((char*)[portCommand mutableBytes])[1] = 0xbb;
-    ((char*)[portCommand mutableBytes])[2] = 0x03;
-    ((char*)[portCommand mutableBytes])[3] = 0x02;
+    ((char*)[kvmCommand mutableBytes])[0] = 0xaa;
+    ((char*)[kvmCommand mutableBytes])[1] = 0xbb;
+    ((char*)[kvmCommand mutableBytes])[2] = 0x03;
+    ((char*)[kvmCommand mutableBytes])[3] = 0x02;
     if(buzzerEnable) {
-        ((char*)[portCommand mutableBytes])[4] = 0x01;
+        ((char*)[kvmCommand mutableBytes])[4] = 0x01;
     } else {
-        ((char*)[portCommand mutableBytes])[4] = 0x00;
+        ((char*)[kvmCommand mutableBytes])[4] = 0x00;
     }
-    ((char*)[portCommand mutableBytes])[5] = 0xee;
+    ((char*)[kvmCommand mutableBytes])[5] = 0xee;
     
-    [self runKvmCommand:portCommand responseLength:0 dataTag:KVM_TAG_SET_BUZZER_ENABLED];
+    [self runKvmCommand:kvmCommand responseLength:0 dataTag:KVM_TAG_SET_BUZZER_ENABLED];
     
     return YES;
 }
@@ -140,20 +140,20 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    NSMutableData* portCommand = [NSMutableData dataWithLength:6];
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:6];
     
-    ((char*)[portCommand mutableBytes])[0] = 0xaa;
-    ((char*)[portCommand mutableBytes])[1] = 0xbb;
-    ((char*)[portCommand mutableBytes])[2] = 0x03;
-    ((char*)[portCommand mutableBytes])[3] = 0x81;
+    ((char*)[kvmCommand mutableBytes])[0] = 0xaa;
+    ((char*)[kvmCommand mutableBytes])[1] = 0xbb;
+    ((char*)[kvmCommand mutableBytes])[2] = 0x03;
+    ((char*)[kvmCommand mutableBytes])[3] = 0x81;
     if(inputDetectionEnable) {
-        ((char*)[portCommand mutableBytes])[4] = 0x01;
+        ((char*)[kvmCommand mutableBytes])[4] = 0x01;
     } else {
-        ((char*)[portCommand mutableBytes])[4] = 0x00;
+        ((char*)[kvmCommand mutableBytes])[4] = 0x00;
     }
-    ((char*)[portCommand mutableBytes])[5] = 0xee;
+    ((char*)[kvmCommand mutableBytes])[5] = 0xee;
     
-    [self runKvmCommand:portCommand responseLength:0 dataTag:KVM_TAG_SET_ACTIVE_INPUT_DETECTION_ENABLED];
+    [self runKvmCommand:kvmCommand responseLength:0 dataTag:KVM_TAG_SET_ACTIVE_INPUT_DETECTION_ENABLED];
     
     return YES;
 }
@@ -163,16 +163,16 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    NSMutableData* portCommand = [NSMutableData dataWithLength:6];
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:6];
     
-    ((char*)[portCommand mutableBytes])[0] = 0xaa;
-    ((char*)[portCommand mutableBytes])[1] = 0xbb;
-    ((char*)[portCommand mutableBytes])[2] = 0x03;
-    ((char*)[portCommand mutableBytes])[3] = 0x10;
-    ((char*)[portCommand mutableBytes])[4] = 0x00;
-    ((char*)[portCommand mutableBytes])[5] = 0xee;
+    ((char*)[kvmCommand mutableBytes])[0] = 0xaa;
+    ((char*)[kvmCommand mutableBytes])[1] = 0xbb;
+    ((char*)[kvmCommand mutableBytes])[2] = 0x03;
+    ((char*)[kvmCommand mutableBytes])[3] = 0x10;
+    ((char*)[kvmCommand mutableBytes])[4] = 0x00;
+    ((char*)[kvmCommand mutableBytes])[5] = 0xee;
 
-    [self runKvmCommand:portCommand responseLength:6 dataTag:KVM_TAG_GET_DISPLAY_PORT];
+    [self runKvmCommand:kvmCommand responseLength:6 dataTag:KVM_TAG_GET_DISPLAY_PORT];
     
     return YES;
 }
@@ -210,16 +210,16 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    NSMutableData* portCommand = [NSMutableData dataWithLength:6];
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:6];
     
-    ((char*)[portCommand mutableBytes])[0] = 0xaa;
-    ((char*)[portCommand mutableBytes])[1] = 0xbb;
-    ((char*)[portCommand mutableBytes])[2] = 0x03;
-    ((char*)[portCommand mutableBytes])[3] = 0x01;
-    ((char*)[portCommand mutableBytes])[4] = portNumber;
-    ((char*)[portCommand mutableBytes])[5] = 0xee;
+    ((char*)[kvmCommand mutableBytes])[0] = 0xaa;
+    ((char*)[kvmCommand mutableBytes])[1] = 0xbb;
+    ((char*)[kvmCommand mutableBytes])[2] = 0x03;
+    ((char*)[kvmCommand mutableBytes])[3] = 0x01;
+    ((char*)[kvmCommand mutableBytes])[4] = portNumber;
+    ((char*)[kvmCommand mutableBytes])[5] = 0xee;
     
-    [self runKvmCommand:portCommand responseLength:6 dataTag:KVM_TAG_SET_DISPLAY_PORT];
+    [self runKvmCommand:kvmCommand responseLength:6 dataTag:KVM_TAG_SET_DISPLAY_PORT];
     
     return YES;
 }
@@ -256,12 +256,12 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    NSMutableData* portCommand = [NSMutableData dataWithLength:3];
-    ((char*)[portCommand mutableBytes])[0] = 'I';
-    ((char*)[portCommand mutableBytes])[1] = 'P';
-    ((char*)[portCommand mutableBytes])[2] = '?';
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:3];
+    ((char*)[kvmCommand mutableBytes])[0] = 'I';
+    ((char*)[kvmCommand mutableBytes])[1] = 'P';
+    ((char*)[kvmCommand mutableBytes])[2] = '?';
     
-    [self runKvmCommand:portCommand responseLength:19 dataTag:KVM_TAG_GET_CONFIGURED_IP];
+    [self runKvmCommand:kvmCommand responseLength:19 dataTag:KVM_TAG_GET_CONFIGURED_IP];
     
     return YES;
 }
@@ -289,12 +289,12 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    NSMutableData* portCommand = [NSMutableData dataWithLength:3];
-    ((char*)[portCommand mutableBytes])[0] = 'M';
-    ((char*)[portCommand mutableBytes])[1] = 'A';
-    ((char*)[portCommand mutableBytes])[2] = '?';
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:3];
+    ((char*)[kvmCommand mutableBytes])[0] = 'M';
+    ((char*)[kvmCommand mutableBytes])[1] = 'A';
+    ((char*)[kvmCommand mutableBytes])[2] = '?';
     
-    [self runKvmCommand:portCommand responseLength:19 dataTag:KVM_TAG_GET_CONFIGURED_NETMASK];
+    [self runKvmCommand:kvmCommand responseLength:19 dataTag:KVM_TAG_GET_CONFIGURED_NETMASK];
     
     return YES;
 }
@@ -322,12 +322,12 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    NSMutableData* portCommand = [NSMutableData dataWithLength:3];
-    ((char*)[portCommand mutableBytes])[0] = 'G';
-    ((char*)[portCommand mutableBytes])[1] = 'W';
-    ((char*)[portCommand mutableBytes])[2] = '?';
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:3];
+    ((char*)[kvmCommand mutableBytes])[0] = 'G';
+    ((char*)[kvmCommand mutableBytes])[1] = 'W';
+    ((char*)[kvmCommand mutableBytes])[2] = '?';
     
-    [self runKvmCommand:portCommand responseLength:19 dataTag:KVM_TAG_GET_CONFIGURED_GATEWAY];
+    [self runKvmCommand:kvmCommand responseLength:19 dataTag:KVM_TAG_GET_CONFIGURED_GATEWAY];
     
     return YES;
 }
@@ -355,12 +355,12 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    NSMutableData* portCommand = [NSMutableData dataWithLength:3];
-    ((char*)[portCommand mutableBytes])[0] = 'P';
-    ((char*)[portCommand mutableBytes])[1] = 'T';
-    ((char*)[portCommand mutableBytes])[2] = '?';
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:3];
+    ((char*)[kvmCommand mutableBytes])[0] = 'P';
+    ((char*)[kvmCommand mutableBytes])[1] = 'T';
+    ((char*)[kvmCommand mutableBytes])[2] = '?';
     
-    [self runKvmCommand:portCommand responseLength:9 dataTag:KVM_TAG_GET_CONFIGURED_PORT];
+    [self runKvmCommand:kvmCommand responseLength:9 dataTag:KVM_TAG_GET_CONFIGURED_PORT];
     
     return YES;
 }
@@ -398,7 +398,16 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    [self runKvmCommand:[[[[@"IP:" stringByAppendingString:ipAddress] stringByAppendingString:@";"] dataUsingEncoding:NSUTF8StringEncoding] bytes] responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_IP];
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:([ipAddress length] + 4)];
+    ((char*)[kvmCommand mutableBytes])[0] = 'I';
+    ((char*)[kvmCommand mutableBytes])[1] = 'P';
+    ((char*)[kvmCommand mutableBytes])[2] = ':';
+    for(int i=0; i<[ipAddress length]; i++) {
+        ((char*)[kvmCommand mutableBytes])[i + 3] = [ipAddress characterAtIndex:i];
+    }
+    ((char*)[kvmCommand mutableBytes])[[ipAddress length] + 3] = ';';
+    
+    [self runKvmCommand:kvmCommand responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_IP];
     
     return YES;
 }
@@ -420,8 +429,17 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    [self runKvmCommand:[[[[@"MA:" stringByAppendingString:netmask] stringByAppendingString:@";"] dataUsingEncoding:NSUTF8StringEncoding] bytes] responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_NETMASK];
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:([netmask length] + 4)];
+    ((char*)[kvmCommand mutableBytes])[0] = 'M';
+    ((char*)[kvmCommand mutableBytes])[1] = 'A';
+    ((char*)[kvmCommand mutableBytes])[2] = ':';
+    for(int i=0; i<[netmask length]; i++) {
+        ((char*)[kvmCommand mutableBytes])[i + 3] = [netmask characterAtIndex:i];
+    }
+    ((char*)[kvmCommand mutableBytes])[[netmask length] + 3] = ';';
     
+    [self runKvmCommand:kvmCommand responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_NETMASK];
+
     return YES;
 }
 
@@ -442,8 +460,17 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    [self runKvmCommand:[[[[@"GW:" stringByAppendingString:gatewayAddress] stringByAppendingString:@";"] dataUsingEncoding:NSUTF8StringEncoding] bytes] responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_NETMASK];
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:([gatewayAddress length] + 4)];
+    ((char*)[kvmCommand mutableBytes])[0] = 'G';
+    ((char*)[kvmCommand mutableBytes])[1] = 'W';
+    ((char*)[kvmCommand mutableBytes])[2] = ':';
+    for(int i=0; i<[gatewayAddress length]; i++) {
+        ((char*)[kvmCommand mutableBytes])[i + 3] = [gatewayAddress characterAtIndex:i];
+    }
+    ((char*)[kvmCommand mutableBytes])[[gatewayAddress length] + 3] = ';';
     
+   [self runKvmCommand:kvmCommand responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_GATEWAY];
+
     return YES;
 }
 
@@ -464,8 +491,19 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return NO;
     }
     
-    [self runKvmCommand:[[[[@"GW:" stringByAppendingString:[@(networkPort) stringValue]] stringByAppendingString:@";"] dataUsingEncoding:NSUTF8StringEncoding] bytes] responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_PORT];
+    NSString* networkPortString = [@(networkPort) stringValue];
     
+    NSMutableData* kvmCommand = [NSMutableData dataWithLength:([networkPortString length] + 4)];
+    ((char*)[kvmCommand mutableBytes])[0] = 'P';
+    ((char*)[kvmCommand mutableBytes])[1] = 'T';
+    ((char*)[kvmCommand mutableBytes])[2] = ':';
+    for(int i=0; i<[networkPortString length]; i++) {
+        ((char*)[kvmCommand mutableBytes])[i + 3] = [networkPortString characterAtIndex:i];
+    }
+    ((char*)[kvmCommand mutableBytes])[[networkPortString length] + 3] = ';';
+    
+    [self runKvmCommand:kvmCommand responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_PORT];
+
     return YES;
 }
 
