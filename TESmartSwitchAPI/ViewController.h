@@ -32,9 +32,5 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     @private SwitchAPI* apiObj;
 }
 
-- (void)connectionCallback;
-- (void)disconnectionCallback;
-- (void)portSelectionCallback:(NSNumber*)newPortNumber;
-
 @end
 

@@ -87,12 +87,48 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     NSButton* connectButton = (NSButton*) [self.view viewWithTag:7];
     [connectButton setTitle:@"Disconnect"];
     [connectButton sizeToFit];
+    
+    NSTextField* ipAddressField = (NSTextField*) [self.view viewWithTag:3];
+    [ipAddressField setEnabled:YES];
+    
+    NSTextField* portField = (NSTextField*) [self.view viewWithTag:4];
+    [portField setEnabled:YES];
+    
+    NSTextField* netmaskField = (NSTextField*) [self.view viewWithTag:5];
+    [netmaskField setEnabled:YES];
+    
+    NSTextField* gatewayField = (NSTextField*) [self.view viewWithTag:6];
+    [gatewayField setEnabled:YES];
+    
+    NSButton* getConfigurationButton = (NSButton*) [self.view viewWithTag:8];
+    [getConfigurationButton setEnabled:YES];
+    
+    NSButton* setConfigurationButton = (NSButton*) [self.view viewWithTag:9];
+    [setConfigurationButton setEnabled:YES];
 }
 
 - (void)disconnectionCallback {
     NSButton* disconnectButton = (NSButton*) [self.view viewWithTag:7];
     [disconnectButton setTitle:@"Connect"];
     [disconnectButton sizeToFit];
+    
+    NSTextField* ipAddressField = (NSTextField*) [self.view viewWithTag:3];
+    [ipAddressField setEnabled:NO];
+    
+    NSTextField* portField = (NSTextField*) [self.view viewWithTag:4];
+    [portField setEnabled:NO];
+    
+    NSTextField* netmaskField = (NSTextField*) [self.view viewWithTag:5];
+    [netmaskField setEnabled:NO];
+    
+    NSTextField* gatewayField = (NSTextField*) [self.view viewWithTag:6];
+    [gatewayField setEnabled:NO];
+    
+    NSButton* getConfigurationButton = (NSButton*) [self.view viewWithTag:8];
+    [getConfigurationButton setEnabled:NO];
+    
+    NSButton* setConfigurationButton = (NSButton*) [self.view viewWithTag:9];
+    [setConfigurationButton setEnabled:NO];
 }
 
 - (IBAction)GetKvmConfiguration:(id)sender {
