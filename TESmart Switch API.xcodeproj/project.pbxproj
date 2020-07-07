@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		043175F324B2ACB900ABE2C0 /* RestrictedIntegerFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 043175F224B2ACB900ABE2C0 /* RestrictedIntegerFormatter.m */; };
 		043175F624B2B35800ABE2C0 /* IPAddressFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 043175F524B2B35800ABE2C0 /* IPAddressFormatter.m */; };
+		043175FB24B3647200ABE2C0 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043175F824B3622500ABE2C0 /* CocoaAsyncSocket.framework */; };
 		04D2751724B191F400534A77 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2751624B191F400534A77 /* AppDelegate.m */; };
 		04D2751A24B191F400534A77 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D2751924B191F400534A77 /* ViewController.m */; };
 		04D2751C24B191F800534A77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04D2751B24B191F800534A77 /* Assets.xcassets */; };
@@ -42,6 +43,7 @@
 		043175F224B2ACB900ABE2C0 /* RestrictedIntegerFormatter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RestrictedIntegerFormatter.m; sourceTree = "<group>"; };
 		043175F424B2B35800ABE2C0 /* IPAddressFormatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPAddressFormatter.h; sourceTree = "<group>"; };
 		043175F524B2B35800ABE2C0 /* IPAddressFormatter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPAddressFormatter.m; sourceTree = "<group>"; };
+		043175F824B3622500ABE2C0 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/Mac/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 		04D2751224B191F400534A77 /* TESmart Switch API.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TESmart Switch API.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D2751524B191F400534A77 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		04D2751624B191F400534A77 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				043175FB24B3647200ABE2C0 /* CocoaAsyncSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +92,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		043175F724B3622500ABE2C0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				043175F824B3622500ABE2C0 /* CocoaAsyncSocket.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		04D2750924B191F400534A77 = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +107,7 @@
 				04D2752B24B191F800534A77 /* TESmartSwitchAPITests */,
 				04D2753624B191F800534A77 /* TESmartSwitchAPIUITests */,
 				04D2751324B191F400534A77 /* Products */,
+				043175F724B3622500ABE2C0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -161,6 +173,7 @@
 				04D2750E24B191F400534A77 /* Sources */,
 				04D2750F24B191F400534A77 /* Frameworks */,
 				04D2751024B191F400534A77 /* Resources */,
+				043175FA24B3624E00ABE2C0 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -274,6 +287,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		043175FA24B3624E00ABE2C0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/CocoaAsyncSocket.framework",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/CocoaAsyncSocket.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		04D2750E24B191F400534A77 /* Sources */ = {
@@ -449,6 +484,10 @@
 				CODE_SIGN_ENTITLEMENTS = TESmartSwitchAPI/TESmartSwitchAPI.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = TESmartSwitchAPI/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -466,6 +505,10 @@
 				CODE_SIGN_ENTITLEMENTS = TESmartSwitchAPI/TESmartSwitchAPI.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = TESmartSwitchAPI/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

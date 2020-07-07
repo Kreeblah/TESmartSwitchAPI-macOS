@@ -9,10 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import "SwitchAPI.h"
 
-@interface ViewController : NSViewController {
+@interface ViewController : NSViewController <SwitchAPICallback> {
     @private int currentPort;
     @private SwitchAPI* apiObj;
 }
+
+- (void)connectionCallback;
+- (void)disconnectionCallback;
+- (void)portSelectionCallback:(NSNumber*)newPortNumber;
 
 @end
 

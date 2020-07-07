@@ -7,8 +7,23 @@
 //
 
 #import "SwitchAPI.h"
+#import "CocoaAsyncSocket/GCDAsyncSocket.h"
 
 @implementation SwitchAPI
+
+- (id)init
+{
+    self = [super init];
+    
+    pendingConnection = NO;
+    isConnected = NO;
+    mainQueue = dispatch_get_main_queue();
+    kvmSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:mainQueue];
+    callbackDictionary = [[NSMutableDictionary alloc] init];
+    callbackObjects = [[NSMutableArray alloc] init];
+    
+    return self;
+}
 
 + (SwitchAPI*)sharedInstance
 {
@@ -20,66 +35,48 @@
     return sharedInstance;
 }
 
-- (BOOL)connectToKvm:(NSString*)connectionHost port:(int)connectionPort {
-    if(connectionHost == nil || connectionHost.length == 0 || connectionPort < 1 || connectionPort > 65535 || switchHost != nil || switchPort != 0 || kvmInputStream != nil || kvmOutputStream != nil) {
-        return NO;
-    }
-    
-    CFReadStreamRef readStream;
-    CFWriteStreamRef writeStream;
-    
-    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)connectionHost, connectionPort, &readStream, &writeStream);
-    
-    NSInputStream* inputStream = (__bridge NSInputStream*)readStream;
-    NSOutputStream* outputStream = (__bridge NSOutputStream*)writeStream;
-    
-    [inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        
-    [inputStream open];
-    [outputStream open];
-    
-    sleep(3);
-    
-    if([inputStream streamStatus] == 7 || [outputStream streamStatus] == 7) {
-        [inputStream close];
-        [outputStream close];
-        
-        return NO;
-    }
-    
-    kvmInputStream = inputStream;
-    kvmOutputStream = outputStream;
-    
-    switchHost = connectionHost;
-    switchPort = connectionPort;
+- (void)registerCallbackObject:(id)callbackObject {
+    [callbackObjects addObject:callbackObject];
+}
 
+- (BOOL)connectToKvm:(NSString*)connectionHost port:(int)connectionPort {
+    if(isConnected || pendingConnection) {
+        return NO;
+    }
+    
+    NSLog(@"Connecting to KVM at %@ on port %d", connectionHost, connectionPort);
+    
+    NSError* err = nil;
+    if(![kvmSocket connectToHost:connectionHost onPort:connectionPort error:&err]) {
+        NSLog(@"Connection error: %@", err);
+        return NO;
+    }
+    
+    pendingConnection = YES;
+    
     return YES;
 }
 
 - (BOOL)disconnectFromKvm {
-    if(switchHost == nil || switchPort == 0 || kvmInputStream == nil || kvmOutputStream == nil) {
+    if(!isConnected && !pendingConnection) {
         return NO;
     }
     
-    [kvmInputStream close];
-    [kvmOutputStream close];
-    
-    kvmInputStream = nil;
-    kvmOutputStream = nil;
-    
-    switchHost = nil;
-    switchPort = 0;
+    [kvmSocket disconnect];
     
     return YES;
 }
 
 - (BOOL)isConnected {
-    return (kvmInputStream != nil && kvmOutputStream != nil && switchHost != nil && switchPort != 0);
+    return isConnected;
+}
+
+- (BOOL)pendingConnection {
+    return pendingConnection;
 }
 
 - (BOOL)setDisplayTimeoutSeconds:(int)timeoutSeconds {
-    if(timeoutSeconds < 0 || timeoutSeconds > 255 || switchHost == nil || switchHost.length == 0 || switchPort < 1 || switchPort > 65535) {
+    if(timeoutSeconds < 0 || timeoutSeconds > 255 || (!isConnected && !pendingConnection)) {
         return NO;
     }
     
@@ -92,13 +89,13 @@
     ((char*)[portCommand mutableBytes])[4] = timeoutSeconds;
     ((char*)[portCommand mutableBytes])[5] = 0xee;
     
-    [self runKvmCommand:portCommand hasData:NO];
+    [self runKvmCommand:portCommand responseLength:0 dataTag:KVM_TAG_SET_DISPLAY_TIMEOUT];
     
     return YES;
 }
 
 - (BOOL)setBuzzerEnabled:(BOOL)buzzerEnable {
-    if(switchHost == nil || switchHost.length == 0 || switchPort < 1 || switchPort > 65535) {
+    if(!isConnected && !pendingConnection) {
         return NO;
     }
     
@@ -115,14 +112,14 @@
     }
     ((char*)[portCommand mutableBytes])[5] = 0xee;
     
-    [self runKvmCommand:portCommand hasData:NO];
+    [self runKvmCommand:portCommand responseLength:0 dataTag:KVM_TAG_SET_BUZZER_ENABLED];
     
     return YES;
 }
 
-- (int)getDisplayPort {
-    if(switchHost == nil || switchHost.length == 0 || switchPort < 1 || switchPort > 65535) {
-        return -1;
+- (BOOL)getDisplayPort {
+    if(!isConnected && !pendingConnection) {
+        return NO;
     }
     
     NSMutableData* portCommand = [NSMutableData dataWithLength:6];
@@ -134,23 +131,41 @@
     ((char*)[portCommand mutableBytes])[4] = 0x00;
     ((char*)[portCommand mutableBytes])[5] = 0xee;
 
-    NSData* returnData = [self runKvmCommand:portCommand hasData:YES];
+    [self runKvmCommand:portCommand responseLength:6 dataTag:KVM_TAG_GET_DISPLAY_PORT];
     
+    return YES;
+}
+
+- (void)getDisplayPortCallback:(NSData*)returnData {
     if(returnData == nil) {
-        return -1;
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(portSelectionCallback:)]) {
+                [testCallback performSelector:@selector(portSelectionCallback:) withObject:@(0)];
+            }
+        }
+        return;
     }
     
     unsigned char* returnBytes = (unsigned char *)[returnData bytes];
     
     if(returnBytes[0] == 0xaa && returnBytes[1] == 0xbb && returnBytes[2] == 0x03 && returnBytes[3] == 0x11 && (returnBytes[5] == returnBytes[4] + 0x16)) {
-        return (returnBytes[4] + 1);
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(portSelectionCallback:)]) {
+                [testCallback performSelector:@selector(portSelectionCallback:) withObject:@(returnBytes[4] + 1)];
+            }
+        }
+    } else {
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(portSelectionCallback:)]) {
+                [testCallback performSelector:@selector(portSelectionCallback:) withObject:@(0)];
+            }
+        }
     }
     
-    return -1;
 }
 
 - (BOOL)setDisplayPort:(int)portNumber {
-    if(portNumber < 1 || portNumber > 16 || switchHost == nil || switchHost.length == 0 || switchPort < 1 || switchPort > 65535) {
+    if(!isConnected && !pendingConnection) {
         return NO;
     }
     
@@ -163,51 +178,140 @@
     ((char*)[portCommand mutableBytes])[4] = portNumber;
     ((char*)[portCommand mutableBytes])[5] = 0xee;
     
-    NSData* returnData = [self runKvmCommand:portCommand hasData:YES];
+    [self runKvmCommand:portCommand responseLength:6 dataTag:KVM_TAG_SET_DISPLAY_PORT];
     
+    return YES;
+}
+
+- (void)setDisplayPortCallback:(NSData*)returnData {
     if(returnData == nil) {
-        return NO;
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(setDisplayPortCallback:)]) {
+                [testCallback performSelector:@selector(setDisplayPortCallback:) withObject:@(0)];
+            }
+        }
+        return;
     }
     
     unsigned char * returnBytes = (unsigned char *)[returnData bytes];
     
-    if(returnBytes[0] == 0xaa && returnBytes[1] == 0xbb && returnBytes[2] == 0x03 && returnBytes[3] == 0x11 && returnBytes[4] == (portNumber - 1) && returnBytes[5] == (0x15 + portNumber)) {
-        return YES;
+    if(returnBytes[0] == 0xaa && returnBytes[1] == 0xbb && returnBytes[2] == 0x03 && returnBytes[3] == 0x11 && (returnBytes[4] == (returnBytes[5] - 0x16))) {
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(setDisplayPortCallback:)]) {
+                [testCallback performSelector:@selector(setDisplayPortCallback:) withObject:@(returnBytes[4] + 1)];
+            }
+        }
+    } else {
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(setDisplayPortCallback:)]) {
+                [testCallback performSelector:@selector(setDisplayPortCallback:) withObject:@(0)];
+            }
+        }
+    }
+}
+
+- (BOOL)getConfiguredIpAddress {
+    if(!isConnected && !pendingConnection) {
+        return NO;
     }
     
-    return NO;
+    NSMutableData* portCommand = [NSMutableData dataWithLength:3];
+    ((char*)[portCommand mutableBytes])[0] = 'I';
+    ((char*)[portCommand mutableBytes])[1] = 'P';
+    ((char*)[portCommand mutableBytes])[2] = '?';
+    
+    [self runKvmCommand:portCommand responseLength:19 dataTag:KVM_TAG_GET_CONFIGURED_IP];
+    
+    return YES;
 }
 
-- (NSString*)getConfiguredIpAddress {
-    NSString* returnString = [self doIpCommand:@"IP?" confirmHeader:@"IP:" hasData:YES];
+- (void)getConfiguredIpAddressCallback:(NSData*)returnData {
+    if(returnData == nil) {
+        return;
+    }
     
     //It sends an extra packet containing only a semicolon with this request,
     //so we can discard it.
-    [kvmInputStream read:[[NSMutableData dataWithLength:1] mutableBytes] maxLength:1];
-    return returnString;
+    //[kvmSocket readDataToLength:1 withTimeout:5 tag:KVM_TAG_NULL];
+    
+    NSString* returnString = [self getIpStringFromReturnBytes:(unsigned char*)[returnData bytes] confirmHeader:@"IP:"];
+    
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(getConfiguredIpAddressCallback:)]) {
+            [testCallback performSelector:@selector(getConfiguredIpAddressCallback:) withObject:returnString];
+        }
+    }
 }
 
-- (NSString*)getConfiguredNetmask {
-    NSString* returnString = [self doIpCommand:@"MA?" confirmHeader:@"MA:" hasData:YES];
+- (BOOL)getConfiguredNetmask {
+    if(!isConnected && !pendingConnection) {
+        return NO;
+    }
+    
+    NSMutableData* portCommand = [NSMutableData dataWithLength:3];
+    ((char*)[portCommand mutableBytes])[0] = 'M';
+    ((char*)[portCommand mutableBytes])[1] = 'A';
+    ((char*)[portCommand mutableBytes])[2] = '?';
+    
+    [self runKvmCommand:portCommand responseLength:19 dataTag:KVM_TAG_GET_CONFIGURED_NETMASK];
+    
+    return YES;
+}
+
+- (void)getConfiguredNetmaskCallback:(NSData*)returnData {
+    if(returnData == nil) {
+        return;
+    }
     
     //It sends an extra packet containing only a semicolon with this request,
     //so we can discard it.
-    [kvmInputStream read:[[NSMutableData dataWithLength:1] mutableBytes] maxLength:1];
-    return returnString;
+    //[kvmSocket readDataToLength:1 withTimeout:5 tag:KVM_TAG_NULL];
+    
+    NSString* returnString = [self getIpStringFromReturnBytes:(unsigned char*)[returnData bytes] confirmHeader:@"MA:"];
+    
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(getConfiguredNetmaskCallback:)]) {
+            [testCallback performSelector:@selector(getConfiguredNetmaskCallback:) withObject:returnString];
+        }
+    }
 }
 
-- (NSString*)getConfiguredGateway {
-    NSString* returnString = [self doIpCommand:@"GW?" confirmHeader:@"GW:" hasData:YES];
+- (BOOL)getConfiguredGateway {
+    if(!isConnected && !pendingConnection) {
+        return NO;
+    }
+    
+    NSMutableData* portCommand = [NSMutableData dataWithLength:3];
+    ((char*)[portCommand mutableBytes])[0] = 'G';
+    ((char*)[portCommand mutableBytes])[1] = 'W';
+    ((char*)[portCommand mutableBytes])[2] = '?';
+    
+    [self runKvmCommand:portCommand responseLength:19 dataTag:KVM_TAG_GET_CONFIGURED_GATEWAY];
+    
+    return YES;
+}
+
+- (void)getConfiguredGatewayCallback:(NSData*)returnData {
+    if(returnData == nil) {
+        return;
+    }
     
     //It sends an extra packet containing only a semicolon with this request,
     //so we can discard it.
-    [kvmInputStream read:[[NSMutableData dataWithLength:1] mutableBytes] maxLength:1];
-    return returnString;
+    //[kvmSocket readDataToLength:1 withTimeout:5 tag:KVM_TAG_NULL];
+    
+    NSString* returnString = [self getIpStringFromReturnBytes:(unsigned char*)[returnData bytes] confirmHeader:@"GW:"];
+    
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(getConfiguredGatewayCallback:)]) {
+            [testCallback performSelector:@selector(getConfiguredGatewayCallback:) withObject:returnString];
+        }
+    }
 }
 
-- (int)getConfiguredNetworkPort {
-    if(switchHost.length == 0 || switchPort < 1 || switchPort > 65535 || kvmInputStream == nil || kvmOutputStream == nil) {
-        return 0;
+- (BOOL)getConfiguredNetworkPort {
+    if(!isConnected && !pendingConnection) {
+        return NO;
     }
     
     NSMutableData* portCommand = [NSMutableData dataWithLength:3];
@@ -215,114 +319,176 @@
     ((char*)[portCommand mutableBytes])[1] = 'T';
     ((char*)[portCommand mutableBytes])[2] = '?';
     
-    NSData* returnData = [self runKvmCommand:portCommand hasData:YES];
+    [self runKvmCommand:portCommand responseLength:9 dataTag:KVM_TAG_GET_CONFIGURED_PORT];
     
+    return YES;
+}
+
+- (void)getConfiguredNetworkPortCallback:(NSData*)returnData {
     if(returnData == nil) {
-        return NO;
+        return;
     }
     
     unsigned char * returnBytes = (unsigned char *)[returnData bytes];
     
-    if(returnBytes[0] == 'P' && returnBytes[1] == 'T' && returnBytes[2] == ':' && returnBytes[8] == ';') {
-        return (10000 * (returnBytes[3] - '0')) + (1000 * (returnBytes[4] - '0')) + (100 * (returnBytes[5] - '0')) + (10 * (returnBytes[6] - '0')) + (returnBytes[7] - '0');
+    int byteOffset = 0;
+    if(returnBytes[0] == ';') {
+        byteOffset = 1;
     }
-
-    return 0;
+    
+    if(returnBytes[0 + byteOffset] == 'P' && returnBytes[1 + byteOffset] == 'T' && returnBytes[2 + byteOffset] == ':' && returnBytes[8 - (8 * byteOffset)] == ';') {
+        NSNumber* portNumber = @((10000 * (returnBytes[3] - '0')) + (1000 * (returnBytes[4] - '0')) + (100 * (returnBytes[5] - '0')) + (10 * (returnBytes[6] - '0')) + (returnBytes[7] - '0'));
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(getConfiguredPortCallback:)]) {
+                [testCallback performSelector:@selector(getConfiguredPortCallback:) withObject:portNumber];
+            }
+        }
+    } else {
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(getConfiguredPortCallback:)]) {
+                [testCallback performSelector:@selector(getConfiguredPortCallback:) withObject:@(0)];
+            }
+        }
+    }
 }
 
 - (BOOL)setConfiguredIpAddress:(NSString*)ipAddress {
-    if([self doIpCommand:[[@"IP:" stringByAppendingString:ipAddress] stringByAppendingString:@";"] confirmHeader:@"OK" hasData:NO] != nil) {
-        return YES;
+    if(!isConnected && !pendingConnection) {
+        return NO;
     }
     
-    return NO;
+    [self runKvmCommand:[[[[@"IP:" stringByAppendingString:ipAddress] stringByAppendingString:@";"] dataUsingEncoding:NSUTF8StringEncoding] bytes] responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_IP];
+    
+    return YES;
+}
+
+- (void)setConfiguredIpAddressCallback:(NSData*)returnData {
+    if(returnData == NULL) {
+        return;
+    }
+    
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(setConfiguredIpAddressCallback:)]) {
+            [testCallback performSelector:@selector(setConfiguredIpAddressCallback:) withObject:[[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding]];
+        }
+    }
 }
 
 - (BOOL)setConfiguredNetmask:(NSString*)netmask {
-    if([self doIpCommand:[[@"MA:" stringByAppendingString:netmask] stringByAppendingString:@";"] confirmHeader:@"OK" hasData:NO] != nil) {
-        return YES;
+    if(!isConnected && !pendingConnection) {
+        return NO;
     }
     
-    return NO;
+    [self runKvmCommand:[[[[@"MA:" stringByAppendingString:netmask] stringByAppendingString:@";"] dataUsingEncoding:NSUTF8StringEncoding] bytes] responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_NETMASK];
+    
+    return YES;
+}
+
+- (void)setConfiguredNetmaskCallback:(NSData*)returnData {
+    if(returnData == NULL) {
+        return;
+    }
+    
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(setConfiguredNetmaskCallback:)]) {
+            [testCallback performSelector:@selector(setConfiguredNetmaskCallback:) withObject:[[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding]];
+        }
+    }
 }
 
 - (BOOL)setConfiguredGateway:(NSString*)gatewayAddress {
-    if([self doIpCommand:[[@"GW:" stringByAppendingString:gatewayAddress] stringByAppendingString:@";"] confirmHeader:@"OK" hasData:NO] != nil) {
-        return YES;
+    if(!isConnected && !pendingConnection) {
+        return NO;
     }
     
-    return NO;
+    [self runKvmCommand:[[[[@"GW:" stringByAppendingString:gatewayAddress] stringByAppendingString:@";"] dataUsingEncoding:NSUTF8StringEncoding] bytes] responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_NETMASK];
+    
+    return YES;
+}
+
+- (void)setConfiguredGatewayCallback:(NSData*)returnData {
+    if(returnData == NULL) {
+        return;
+    }
+    
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(setConfiguredGatewayCallback:)]) {
+            [testCallback performSelector:@selector(setConfiguredGatewayCallback:) withObject:[[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding]];
+        }
+    }
 }
 
 - (BOOL)setConfiguredNetworkPort:(int)networkPort {
-    if([self doIpCommand:[[@"PT:" stringByAppendingString:[@(networkPort) stringValue]] stringByAppendingString:@";"] confirmHeader:@"OK" hasData:NO] != nil) {
-        return YES;
+    if(!isConnected && !pendingConnection) {
+        return NO;
     }
     
-    return NO;
+    [self runKvmCommand:[[[[@"GW:" stringByAppendingString:[@(networkPort) stringValue]] stringByAppendingString:@";"] dataUsingEncoding:NSUTF8StringEncoding] bytes] responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_PORT];
+    
+    return YES;
 }
 
-- (NSString*)doIpCommand:(NSString*)commandString confirmHeader:(NSString*)confirmHeader hasData:(BOOL)hasData {
-    if(switchHost.length == 0 || switchPort < 1 || switchPort > 65535 || kvmInputStream == nil || kvmOutputStream == nil) {
-        return nil;
+- (void)setConfiguredNetworkPortCallback:(NSData*)returnData {
+    if(returnData == NULL) {
+        return;
     }
     
-    NSData* portCommand = [NSData dataWithBytesNoCopy:(void *)[commandString UTF8String] length:[commandString length] freeWhenDone:NO];
-    
-    if(portCommand == nil) {
-        return nil;
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(setConfiguredPortCallback:)]) {
+            [testCallback performSelector:@selector(setConfiguredPortCallback:) withObject:[[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding]];
+        }
     }
-    
-    if(hasData) {
-        return [self getIpStringFromReturnBytes:(unsigned char *)[[self runKvmCommand:portCommand hasData:YES] bytes] confirmHeader:confirmHeader];
-    } else {
-        return [[NSString alloc] initWithBytes:(unsigned char *)[[self runKvmCommand:portCommand hasData:YES] bytes] length:commandString.length encoding:NSUTF8StringEncoding];
-    }
-    
 }
 
 - (NSString*)getIpStringFromReturnBytes:(unsigned char *)dataArray confirmHeader:(NSString*)confirmHeader {
-    if(dataArray[0] == [confirmHeader characterAtIndex:0] && dataArray[1] == [confirmHeader characterAtIndex:1] && dataArray[2] == [confirmHeader characterAtIndex:2]) {
+    
+    int byteOffset = 0;
+    
+    if(dataArray[0] == ';') {
+        byteOffset = 1;
+    }
+    
+    if(dataArray[0 + byteOffset] == [confirmHeader characterAtIndex:0] && dataArray[1 + byteOffset] == [confirmHeader characterAtIndex:1] && dataArray[2 + byteOffset] == [confirmHeader characterAtIndex:2]) {
         NSMutableString* returnString = [[NSMutableString alloc] init];
-        if(dataArray[3] != '0') {
-            [returnString appendFormat:@"%c", dataArray[3]];
+        if(dataArray[3 + byteOffset] != '0') {
+            [returnString appendFormat:@"%c", dataArray[3 + byteOffset]];
         }
         
-        if(dataArray[4] != '0') {
-            [returnString appendFormat:@"%c", dataArray[4]];
+        if(dataArray[4 + byteOffset] != '0') {
+            [returnString appendFormat:@"%c", dataArray[4 + byteOffset]];
         }
         
-        [returnString appendFormat:@"%c.", dataArray[5]];
+        [returnString appendFormat:@"%c.", dataArray[5 + byteOffset]];
         
-        if(dataArray[7] != '0') {
-            [returnString appendFormat:@"%c", dataArray[7]];
+        if(dataArray[7 + byteOffset] != '0') {
+            [returnString appendFormat:@"%c", dataArray[7 + byteOffset]];
         }
         
-        if(dataArray[8] != '0') {
-            [returnString appendFormat:@"%c", dataArray[8]];
+        if(dataArray[8 + byteOffset] != '0') {
+            [returnString appendFormat:@"%c", dataArray[8 + byteOffset]];
         }
         
-        [returnString appendFormat:@"%c.", dataArray[9]];
+        [returnString appendFormat:@"%c.", dataArray[9 + byteOffset]];
         
-        if(dataArray[11] != '0') {
-            [returnString appendFormat:@"%c", dataArray[11]];
+        if(dataArray[11 + byteOffset] != '0') {
+            [returnString appendFormat:@"%c", dataArray[11 + byteOffset]];
         }
         
-        if(dataArray[12] != '0') {
-            [returnString appendFormat:@"%c", dataArray[12]];
+        if(dataArray[12 + byteOffset] != '0') {
+            [returnString appendFormat:@"%c", dataArray[12 + byteOffset]];
         }
         
-        [returnString appendFormat:@"%c.", dataArray[13]];
+        [returnString appendFormat:@"%c.", dataArray[13 + byteOffset]];
         
-        if(dataArray[15] != '0') {
-            [returnString appendFormat:@"%c", dataArray[15]];
+        if(dataArray[15 + byteOffset] != '0') {
+            [returnString appendFormat:@"%c", dataArray[15 + byteOffset]];
         }
         
-        if(dataArray[16] != '0') {
-            [returnString appendFormat:@"%c", dataArray[16]];
+        if(dataArray[16 + byteOffset] != '0') {
+            [returnString appendFormat:@"%c", dataArray[16 + byteOffset]];
         }
         
-        [returnString appendFormat:@"%c", dataArray[17]];
+        [returnString appendFormat:@"%c", dataArray[17 + byteOffset]];
         
         return returnString;
     }
@@ -330,21 +496,78 @@
     return nil;
 }
 
-- (NSData*)runKvmCommand:(NSData*)command hasData:(BOOL)hasData {
-    if([kvmInputStream streamStatus] == NSStreamStatusError || [kvmOutputStream streamStatus] == NSStreamStatusError) {
-        return nil;
+- (void)runKvmCommand:(NSData*)command responseLength:(unsigned int)responseLength dataTag:(long)dataTag {
+    if(!isConnected && !pendingConnection) {
+        return;
     }
 
-    [kvmOutputStream write:[command bytes] maxLength:[command length]];
+    //Calling writeData too quickly combines multiple writes
+    //into a single packet, which causes the call to fail,
+    //and the connection to be closed.
+//    sleep(1);
+    
+    [kvmSocket writeData:command withTimeout:20 tag:dataTag];
 
-    if(hasData) {
-        NSMutableData* recvBuff = [NSMutableData dataWithLength:256];
-        
-        [kvmInputStream read:[recvBuff mutableBytes] maxLength:256];
-        
-        return recvBuff;
-    } else {
-        return nil;
+    if(responseLength > 0) {
+        [kvmSocket readDataToLength:responseLength withTimeout:5 tag:dataTag];
+    }
+}
+
+- (void)socket:(GCDAsyncSocket*)sock didWriteDataWithTag:(long)tag {
+    return;
+}
+
+- (void)socket:(GCDAsyncSocket*)sock didConnectToHost:(nonnull NSString *)host port:(uint16_t)port {
+    
+    switchHost = host;
+    switchPort = port;
+    
+    pendingConnection = NO;
+    isConnected = YES;
+    
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(connectionCallback)]) {
+            [testCallback performSelector:@selector(connectionCallback)];
+        }
+    }
+}
+
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)error {
+    switchHost = NULL;
+    switchPort = 0;
+    
+    pendingConnection = NO;
+    isConnected = NO;
+    
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(disconnectionCallback)]) {
+            [testCallback performSelector:@selector(disconnectionCallback)];
+        }
+    }
+}
+
+- (void)socket:(GCDAsyncSocket*)sender didReadData:(nonnull NSData *)data withTag:(long)tag {
+    
+    if(tag == KVM_TAG_GET_DISPLAY_PORT) {
+        [self getDisplayPortCallback:data];
+    } else if(tag == KVM_TAG_SET_DISPLAY_PORT) {
+        [self setDisplayPortCallback:data];
+    } else if(tag == KVM_TAG_GET_CONFIGURED_IP) {
+        [self getConfiguredIpAddressCallback:data];
+    } else if(tag == KVM_TAG_GET_CONFIGURED_NETMASK) {
+        [self getConfiguredNetmaskCallback:data];
+    } else if(tag == KVM_TAG_GET_CONFIGURED_GATEWAY) {
+        [self getConfiguredGatewayCallback:data];
+    } else if(tag == KVM_TAG_GET_CONFIGURED_PORT) {
+        [self getConfiguredNetworkPortCallback:data];
+    } else if(tag == KVM_TAG_SET_CONFIGURED_IP) {
+        [self setConfiguredIpAddressCallback:data];
+    } else if(tag == KVM_TAG_SET_CONFIGURED_NETMASK) {
+        [self setConfiguredNetmaskCallback:data];
+    } else if(tag == KVM_TAG_SET_CONFIGURED_GATEWAY) {
+        [self setConfiguredGatewayCallback:data];
+    } else if(tag == KVM_TAG_NULL) {
+        return;
     }
 }
 

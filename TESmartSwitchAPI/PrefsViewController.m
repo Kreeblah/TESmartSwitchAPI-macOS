@@ -49,58 +49,82 @@
     if(apiObj == nil) {
         apiObj = [SwitchAPI sharedInstance];
     }
+    
+    if([apiObj isConnected]) {
+        [self connectionCallback];
+    }
+    
+    [apiObj registerCallbackObject:self];
 }
 
-- (IBAction)GetKvmConfiguration:(id)sender {
-    BOOL isConnected = [apiObj isConnected];
-    
-    if(!isConnected) {
-        if(![apiObj connectToKvm:[[NSUserDefaults standardUserDefaults] stringForKey:@"kvmHost"] port:(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"kvmNetworkPort"]]) {
-            return;
-        }
-    }
-
-    NSTextField* ipTextField = (NSTextField*) [self.view viewWithTag:3];
-    [ipTextField setStringValue:[apiObj getConfiguredIpAddress]];
-    
-    NSTextField* portTextField = (NSTextField*) [self.view viewWithTag:4];
-    [portTextField setStringValue:[@([apiObj getConfiguredNetworkPort]) stringValue]];
-    
-    NSTextField* netmaskTextField = (NSTextField*) [self.view viewWithTag:5];
-    [netmaskTextField setStringValue:[apiObj getConfiguredNetmask]];
-    
-    NSTextField* gatewayTextField = (NSTextField*) [self.view viewWithTag:6];
-    [gatewayTextField setStringValue:[apiObj getConfiguredGateway]];
-    
-    if(!isConnected) {
+- (IBAction)ConnectButton:(id)sender {
+    if(![apiObj isConnected] && ![apiObj pendingConnection]) {
+        [apiObj connectToKvm:[[NSUserDefaults standardUserDefaults] stringForKey:@"kvmHost"] port:(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"kvmNetworkPort"]];
+    } else {
         [apiObj disconnectFromKvm];
     }
 }
 
-- (IBAction)SetKvmConfiguration:(id)sender {
-    BOOL isConnected = [apiObj isConnected];
-    
-    if(!isConnected) {
-        if(![apiObj connectToKvm:[[NSUserDefaults standardUserDefaults] stringForKey:@"KvmHost"] port:(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"KvmNetworkPort"]]) {
-            return;
-        }
-    }
+- (void)connectionCallback {
+    NSButton* connectButton = (NSButton*) [self.view viewWithTag:7];
+    [connectButton setTitle:@"Disconnect"];
+    [connectButton sizeToFit];
+}
 
+- (void)disconnectionCallback {
+    NSButton* disconnectButton = (NSButton*) [self.view viewWithTag:7];
+    [disconnectButton setTitle:@"Connect"];
+    [disconnectButton sizeToFit];
+}
+
+- (IBAction)GetKvmConfiguration:(id)sender {
+    [apiObj getConfiguredIpAddress];
+    sleep(1);
+    [apiObj getConfiguredNetworkPort];
+    sleep(1);
+    [apiObj getConfiguredNetmask];
+    sleep(1);
+    [apiObj getConfiguredGateway];
+}
+
+- (void)getConfiguredIpAddressCallback:(NSString*)ipAddress {
+    NSTextField* ipTextField = (NSTextField*) [self.view viewWithTag:3];
+    [ipTextField setStringValue:ipAddress];
+}
+
+- (void)getConfiguredPortCallback:(NSNumber*)portNumber {
+    NSTextField* portTextField = (NSTextField*) [self.view viewWithTag:4];
+    [portTextField setStringValue:[portNumber stringValue]];
+}
+
+- (void)getConfiguredNetmaskCallback:(NSString*)netmask {
+    NSTextField* netmaskTextField = (NSTextField*) [self.view viewWithTag:5];
+    [netmaskTextField setStringValue:netmask];
+}
+
+- (void)getConfiguredGatewayCallback:(NSString*)gateway {
+    NSTextField* gatewayTextField = (NSTextField*) [self.view viewWithTag:6];
+    [gatewayTextField setStringValue:gateway];
+}
+
+- (IBAction)SetKvmConfiguration:(id)sender {
     NSTextField* ipTextField = (NSTextField*) [self.view viewWithTag:3];
     [apiObj setConfiguredIpAddress:[ipTextField stringValue]];
+    
+    sleep(1);
     
     NSTextField* portTextField = (NSTextField*) [self.view viewWithTag:4];
     [apiObj setConfiguredNetworkPort:[portTextField intValue]];
     
+    sleep(1);
+    
     NSTextField* netmaskTextField = (NSTextField*) [self.view viewWithTag:5];
     [apiObj setConfiguredGateway:[netmaskTextField stringValue]];
     
+    sleep(1);
+    
     NSTextField* gatewayTextField = (NSTextField*) [self.view viewWithTag:6];
     [apiObj setConfiguredGateway:[gatewayTextField stringValue]];
-    
-    if(!isConnected) {
-        [apiObj disconnectFromKvm];
-    }
 }
 
 @end
