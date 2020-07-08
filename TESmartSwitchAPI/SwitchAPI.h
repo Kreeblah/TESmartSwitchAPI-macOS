@@ -52,6 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)connectionErrorCallback:(NSError*)error;
 - (void)disconnectionCallback;
 - (void)disconnectionErrorCallback:(NSError*)error;
+- (void)setDisplayTimeoutCallback;
+- (void)setBuzzerEnabledCallback;
 - (void)portSelectionCallback:(NSNumber*)selectedPortNumber;
 - (void)setDisplayPortCallback:(NSNumber*)setPortNumber;
 - (void)getConfiguredIpAddressCallback:(NSString*)ipAddress;
@@ -82,7 +84,7 @@ struct sCallbackParameters {
 typedef struct sCallbackParameters CallbackParameters;
 
 + (SwitchAPI*)sharedInstance;
-- (void)registerCallbackObject:(id)callbackObject;
+- (void)registerCallbackObject:(id <SwitchAPICallback>)callbackObject;
 - (BOOL)connectToKvm:(NSString*)connectionHost port:(int)connectionPort;
 - (BOOL)disconnectFromKvm;
 - (BOOL)isConnected;

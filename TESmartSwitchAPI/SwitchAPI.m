@@ -53,7 +53,7 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     return sharedInstance;
 }
 
-- (void)registerCallbackObject:(id)callbackObject {
+- (void)registerCallbackObject:(id <SwitchAPICallback>)callbackObject {
     [callbackObjects addObject:callbackObject];
 }
 
@@ -112,6 +112,14 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     return YES;
 }
 
+- (void)setDisplayTimeoutCallback {
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(setDisplayTimeoutCallback)]) {
+            [testCallback performSelector:@selector(setDisplayTimeoutCallback)];
+        }
+    }
+}
+
 - (BOOL)setBuzzerEnabled:(BOOL)buzzerEnable {
     if(!isConnected && !pendingConnection) {
         return NO;
@@ -133,6 +141,14 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     [self runKvmCommand:kvmCommand responseLength:0 dataTag:KVM_TAG_SET_BUZZER_ENABLED];
     
     return YES;
+}
+
+- (void)setBuzzerEnabledCallback {
+    for(id testCallback in callbackObjects) {
+        if([testCallback respondsToSelector:@selector(setBuzzerEnabledCallback)]) {
+            [testCallback performSelector:@selector(setBuzzerEnabledCallback)];
+        }
+    }
 }
 
 - (BOOL)setActiveInputDetectionEnabled:(BOOL)inputDetectionEnable {
@@ -588,7 +604,13 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 - (void)socket:(GCDAsyncSocket*)sock didWriteDataWithTag:(long)tag {
-    return;
+    if(tag == KVM_TAG_SET_DISPLAY_TIMEOUT) {
+        [self setDisplayTimeoutCallback];
+    } else if(tag == KVM_TAG_SET_BUZZER_ENABLED) {
+        [self setBuzzerEnabledCallback];
+    } else if(tag == KVM_TAG_NULL) {
+        return;
+    }
 }
 
 - (void)socket:(GCDAsyncSocket*)sock didConnectToHost:(nonnull NSString *)host port:(uint16_t)port {
@@ -632,7 +654,6 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 - (void)socket:(GCDAsyncSocket*)sender didReadData:(nonnull NSData *)data withTag:(long)tag {
-    
     if(tag == KVM_TAG_GET_DISPLAY_PORT) {
         [self getDisplayPortCallback:data];
     } else if(tag == KVM_TAG_SET_DISPLAY_PORT) {
