@@ -30,7 +30,7 @@ Setting the current active display port is done by sending this packet:
 
 BYTE1 here is a **non-zero-indexed** byte indicating the port to switch to.  So, if port 1 should be selected, BYTE1 should be 0x01, and if port 12 should be selected, then BYTE1 should be 0x0c.
 
-The KVM will respond with two packets that look like this:
+The KVM will respond with a packet that looks like this:
 
     0xaa 0xbb 0x03 0x11 BYTE1 BYTE2
 
@@ -87,7 +87,7 @@ The ASCII equivalents of these are:
 
 A couple of things to note here are that all octets for the IP address, netmask, and gateway are zero-padded to fill out three characters.  Similarly, the port number is zero-padded to fill out five characters.
 
-**Note:** The port reply has a semi-colon at the end, which the IP address, netmask, and gateway do not.  However, each of the IP address, netmask, and gateway **also send a second packet** containing only 0x3b (a semi-colon).  Depending on your network library, you may need to account for this, including which order the pair of packets is received/processed in.
+**Note:** The port reply has a semi-colon at the end, which the IP address, netmask, and gateway do not.  However, each of the IP address, netmask, and gateway **also sends a second packet** containing only 0x3b (a semi-colon).  Depending on your network library, you may need to account for this, including which order the pair of packets is received/processed in.
 
 ## Setting the Configured Network Settings
 
