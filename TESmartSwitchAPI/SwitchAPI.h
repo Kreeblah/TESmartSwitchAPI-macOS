@@ -49,7 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SwitchAPICallback
 @optional
 - (void)connectionCallback;
+- (void)connectionErrorCallback:(NSError*)error;
 - (void)disconnectionCallback;
+- (void)disconnectionErrorCallback:(NSError*)error;
 - (void)portSelectionCallback:(NSNumber*)selectedPortNumber;
 - (void)setDisplayPortCallback:(NSNumber*)setPortNumber;
 - (void)getConfiguredIpAddressCallback:(NSString*)ipAddress;

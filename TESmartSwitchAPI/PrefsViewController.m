@@ -77,8 +77,16 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
 
 - (IBAction)ConnectButton:(id)sender {
     if(![apiObj isConnected] && ![apiObj pendingConnection]) {
+        NSButton* connectButton = (NSButton*) [self.view viewWithTag:7];
+        [connectButton setTitle:@"Disconnect"];
+        [connectButton sizeToFit];
+        
         [apiObj connectToKvm:[[NSUserDefaults standardUserDefaults] stringForKey:@"kvmHost"] port:(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"kvmNetworkPort"]];
     } else {
+        NSButton* disconnectButton = (NSButton*) [self.view viewWithTag:7];
+        [disconnectButton setTitle:@"Connect"];
+        [disconnectButton sizeToFit];
+        
         [apiObj disconnectFromKvm];
     }
 }
@@ -133,27 +141,28 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
 
 - (IBAction)GetKvmConfiguration:(id)sender {
     [apiObj getConfiguredIpAddress];
-    sleep(1);
-    [apiObj getConfiguredNetworkPort];
-    sleep(1);
-    [apiObj getConfiguredNetmask];
-    sleep(1);
-    [apiObj getConfiguredGateway];
 }
 
 - (void)getConfiguredIpAddressCallback:(NSString*)ipAddress {
     NSTextField* ipTextField = (NSTextField*) [self.view viewWithTag:3];
     [ipTextField setStringValue:ipAddress];
+    
+    [apiObj getConfiguredNetworkPort];
 }
 
 - (void)getConfiguredPortCallback:(NSNumber*)portNumber {
     NSTextField* portTextField = (NSTextField*) [self.view viewWithTag:4];
     [portTextField setStringValue:[portNumber stringValue]];
+    
+    [apiObj getConfiguredNetmask];
 }
 
 - (void)getConfiguredNetmaskCallback:(NSString*)netmask {
     NSTextField* netmaskTextField = (NSTextField*) [self.view viewWithTag:5];
     [netmaskTextField setStringValue:netmask];
+    
+    [apiObj getConfiguredGateway];
+
 }
 
 - (void)getConfiguredGatewayCallback:(NSString*)gateway {
@@ -163,22 +172,59 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
 
 - (IBAction)SetKvmConfiguration:(id)sender {
     NSTextField* ipTextField = (NSTextField*) [self.view viewWithTag:3];
+    NSTextField* netmaskTextField = (NSTextField*) [self.view viewWithTag:5];
+    NSTextField* gatewayTextField = (NSTextField*) [self.view viewWithTag:6];
+    
+    if(![self validateIPv4Address:[ipTextField stringValue]] || ![self validateIPv4Address:[netmaskTextField stringValue]] || ![self validateIPv4Address:[gatewayTextField stringValue]]) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert addButtonWithTitle:@"OK"];
+        [alert setMessageText:@"Invalid IP address"];
+        [alert setInformativeText:@"The IP address, netmask, and gateway fields must each contain a valid IPv4-formatted string."];
+        [alert setAlertStyle:NSAlertStyleCritical];
+        [alert runModal];
+        
+        return;
+    }
+    
     [apiObj setConfiguredIpAddress:[ipTextField stringValue]];
-    
-    sleep(1);
-    
+}
+
+- (void)setConfiguredIpAddressCallback:(NSString*)ipAddress {
     NSTextField* portTextField = (NSTextField*) [self.view viewWithTag:4];
     [apiObj setConfiguredNetworkPort:[portTextField intValue]];
-    
-    sleep(1);
-    
+}
+
+- (void)setConfiguredPortCallback:(NSNumber*)portNumber {
     NSTextField* netmaskTextField = (NSTextField*) [self.view viewWithTag:5];
     [apiObj setConfiguredNetmask:[netmaskTextField stringValue]];
-    
-    sleep(1);
-    
+}
+
+- (void)setConfiguredNetmaskCallback:(NSString*)netmask {
     NSTextField* gatewayTextField = (NSTextField*) [self.view viewWithTag:6];
     [apiObj setConfiguredGateway:[gatewayTextField stringValue]];
+}
+- (void)setConfiguredGatewayCallback:(NSString*)gateway {
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert addButtonWithTitle:@"OK"];
+    [alert setMessageText:@"Network configuration complete"];
+    [alert setInformativeText:@"The network configuration for the KVM is complete.  To apply the settings, reboot the KVM."];
+    [alert setAlertStyle:NSAlertStyleInformational];
+    [alert runModal];
+}
+
+- (BOOL)validateIPv4Address:(NSString*)ipAddress {
+    NSRange searchRange = NSMakeRange(0, [ipAddress length]);
+    NSString* ipv4Pattern = @"^(25[0-5]\\.|2[0-4][0-9]\\.|[01]?[0-9][0-9]?\\.){3}((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$";
+    NSError* searchError = nil;
+    
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:ipv4Pattern options:0 error:&searchError];
+    unsigned long regexMatches = [regex numberOfMatchesInString:ipAddress options:0 range:searchRange];
+    
+    if(regexMatches == 0) {
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end

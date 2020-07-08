@@ -55,8 +55,16 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
 
 - (IBAction)ConnectButton:(id)sender {
     if(![apiObj isConnected] && ![apiObj pendingConnection]) {
+        NSButton* connectButton = (NSButton*) [self.view viewWithTag:22];
+        [connectButton setTitle:@"Disconnect"];
+        [connectButton sizeToFit];
+        
         [apiObj connectToKvm:[[NSUserDefaults standardUserDefaults] stringForKey:@"kvmHost"] port:(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"kvmNetworkPort"]];
     } else {
+        NSButton* disconnectButton = (NSButton*) [self.view viewWithTag:22];
+        [disconnectButton setTitle:@"Connect"];
+        [disconnectButton sizeToFit];
+        
         [apiObj disconnectFromKvm];
     }
 }

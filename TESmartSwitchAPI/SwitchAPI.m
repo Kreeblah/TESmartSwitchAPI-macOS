@@ -407,7 +407,7 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     }
     ((char*)[kvmCommand mutableBytes])[[ipAddress length] + 3] = ';';
     
-    [self runKvmCommand:kvmCommand responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_IP];
+    [self runKvmCommand:kvmCommand responseLength:2 dataTag:KVM_TAG_SET_CONFIGURED_IP];
     
     return YES;
 }
@@ -438,7 +438,7 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     }
     ((char*)[kvmCommand mutableBytes])[[netmask length] + 3] = ';';
     
-    [self runKvmCommand:kvmCommand responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_NETMASK];
+    [self runKvmCommand:kvmCommand responseLength:2 dataTag:KVM_TAG_SET_CONFIGURED_NETMASK];
 
     return YES;
 }
@@ -469,7 +469,7 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     }
     ((char*)[kvmCommand mutableBytes])[[gatewayAddress length] + 3] = ';';
     
-   [self runKvmCommand:kvmCommand responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_GATEWAY];
+   [self runKvmCommand:kvmCommand responseLength:2 dataTag:KVM_TAG_SET_CONFIGURED_GATEWAY];
 
     return YES;
 }
@@ -502,7 +502,7 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     }
     ((char*)[kvmCommand mutableBytes])[[networkPortString length] + 3] = ';';
     
-    [self runKvmCommand:kvmCommand responseLength:18 dataTag:KVM_TAG_SET_CONFIGURED_PORT];
+    [self runKvmCommand:kvmCommand responseLength:2 dataTag:KVM_TAG_SET_CONFIGURED_PORT];
 
     return YES;
 }
@@ -580,7 +580,7 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return;
     }
 
-    [kvmSocket writeData:command withTimeout:20 tag:dataTag];
+    [kvmSocket writeData:command withTimeout:5 tag:dataTag];
 
     if(responseLength > 0) {
         [kvmSocket readDataToLength:responseLength withTimeout:5 tag:dataTag];
@@ -616,9 +616,17 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     pendingConnection = NO;
     isConnected = NO;
     
-    for(id testCallback in callbackObjects) {
-        if([testCallback respondsToSelector:@selector(disconnectionCallback)]) {
-            [testCallback performSelector:@selector(disconnectionCallback)];
+    if(error == NULL) {
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(disconnectionCallback)]) {
+                [testCallback performSelector:@selector(disconnectionCallback)];
+            }
+        }
+    } else {
+        for(id testCallback in callbackObjects) {
+            if([testCallback respondsToSelector:@selector(disconnectionErrorCallback:)]) {
+                [testCallback performSelector:@selector(disconnectionErrorCallback:) withObject:error];
+            }
         }
     }
 }
@@ -643,6 +651,8 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         [self setConfiguredNetmaskCallback:data];
     } else if(tag == KVM_TAG_SET_CONFIGURED_GATEWAY) {
         [self setConfiguredGatewayCallback:data];
+    } else if(tag == KVM_TAG_SET_CONFIGURED_PORT) {
+        [self setConfiguredNetworkPortCallback:data];
     } else if(tag == KVM_TAG_NULL) {
         return;
     }
