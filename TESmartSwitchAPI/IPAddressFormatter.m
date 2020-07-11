@@ -47,7 +47,7 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     }
     
     NSRange searchRange = NSMakeRange(0, [partialString length]);
-    NSString* ipv4Pattern = @"^(25[0-5]\\.|2[0-4][0-9]\\.|1[0-9][0-9]\\.|[1-9][0-9]\\.|[0-9]\\.){0,3}?(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])?$";
+    NSString* ipv4Pattern = @"^(25[0-5]\\.|2[0-4][0-9]\\.|1[0-9][0-9]\\.|[1-9][0-9]\\.|[0-9]\\.){0,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])?$";
     NSError* searchError = nil;
     
     NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:ipv4Pattern options:0 error:&searchError];
