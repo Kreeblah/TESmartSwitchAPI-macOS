@@ -287,10 +287,6 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return;
     }
     
-    //It sends an extra packet containing only a semicolon with this request,
-    //so we can discard it.
-    //[kvmSocket readDataToLength:1 withTimeout:5 tag:KVM_TAG_NULL];
-    
     NSString* returnString = [self getIpStringFromReturnBytes:(unsigned char*)[returnData bytes] confirmHeader:@"IP:"];
     
     for(id testCallback in callbackObjects) {
@@ -320,10 +316,6 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
         return;
     }
     
-    //It sends an extra packet containing only a semicolon with this request,
-    //so we can discard it.
-    //[kvmSocket readDataToLength:1 withTimeout:5 tag:KVM_TAG_NULL];
-    
     NSString* returnString = [self getIpStringFromReturnBytes:(unsigned char*)[returnData bytes] confirmHeader:@"MA:"];
     
     for(id testCallback in callbackObjects) {
@@ -352,10 +344,6 @@ along with TESmart Switch API.  If not, see <https://www.gnu.org/licenses/>.
     if(returnData == nil) {
         return;
     }
-    
-    //It sends an extra packet containing only a semicolon with this request,
-    //so we can discard it.
-    //[kvmSocket readDataToLength:1 withTimeout:5 tag:KVM_TAG_NULL];
     
     NSString* returnString = [self getIpStringFromReturnBytes:(unsigned char*)[returnData bytes] confirmHeader:@"GW:"];
     
